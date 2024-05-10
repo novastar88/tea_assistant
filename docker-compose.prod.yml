@@ -1,0 +1,52 @@
+version: '3.8'
+
+networks:
+   - backend_isolated
+   - outside
+
+services:
+   backend:
+      build:
+         context: ./api
+         dockerfile: dockerfile.prod
+      command: gunicorn api.wsgi:application --bind 0.0.0.0:8000
+      volumes:
+         - django_backups:/home/app/web/backups
+      expose:
+         - 8000
+      env_file:
+         - ./api/.env.prod
+      depends_on:
+         - db
+      networks:
+         - backend_isolated
+
+   db:
+      image: postgres:16.2
+      volumes:
+         - postgres_data:/var/lib/postgresql/data/
+      expose:
+         - 5432
+      env_file:
+         - ./api/.env.prod
+      networks:
+         - backend_isolated
+
+   frontend:
+      build:
+         context: ./frontend
+         dockerfile: dockerfile.production
+      command: 'npm start'
+      ports:
+         - '3002:3000'
+      env_file:
+         - ./frontend/.env.production
+      depends_on:
+         - backend
+      networks:
+         - backend_isolated
+         - outside
+
+volumes:
+   postgres_data:
+   django_backups:

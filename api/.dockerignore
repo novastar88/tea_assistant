@@ -1,0 +1,5 @@
+.env.dev
+*/migrations/*
+.dockerignore
+dockerfile.prod
+staticfiles

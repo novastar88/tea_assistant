@@ -1,0 +1,20 @@
+# Use the official Node.js image as the base  
+FROM node:20.12-alpine
+
+# Set the working directory inside the container  
+WORKDIR /app
+
+# Copy package.json and package-lock.json to the container  
+COPY package*.json ./
+
+# Install dependencies  
+RUN npm ci
+
+# Copy the app source code to the container  
+COPY . .
+
+# wait for backend
+# RUN ./wait_for_backend.sh
+
+# Build the Next.js app  
+RUN npm run build

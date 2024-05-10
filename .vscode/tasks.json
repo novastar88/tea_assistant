@@ -1,0 +1,74 @@
+{
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "generate requirements.txt",
+			"type": "shell",
+			"command": "python -m  pipreqs.pipreqs --encoding utf-8 --force C:\\Users\\Mateusz\\PycharmProjects\\tea_assistant\\api",
+			"problemMatcher": []
+		},
+		{
+			"label": "django make migrations",
+			"type": "shell",
+			"command": "cd api;py manage.py makemigrations"
+		},
+		{
+			"label": "django make migrate",
+			"type": "shell",
+			"command": "cd api;py manage.py migrate"
+		},
+		{
+			"label": "django maintain",
+			"dependsOrder": "sequence",
+			"dependsOn": [
+				"django make migrations",
+				"django make migrate",
+				"django syncdb"
+			],
+			"problemMatcher": []
+		},
+		{
+			"label": "django runserver",
+			"type": "shell",
+			"command": "cd api;py manage.py runserver"
+		},
+		{
+			"label": "django run shell",
+			"type": "shell",
+			"command": "cd api;py manage.py shell"
+		},
+		{
+			"label": "django syncdb",
+			"type": "shell",
+			"command": "cd api;py manage.py migrate --run-syncdb"
+		},
+		{
+			"label": "django test",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": ["cd api;py manage.py", "test", "--verbosity=2"]
+		},
+		{
+			"label": "docker compose up prod",
+			"type": "shell",
+			"command": "docker-compose -f \"docker-compose.prod.yml\" up -d --build"
+		},
+		{
+			"label": "docker compose down prod",
+			"type": "shell",
+			"command": "docker-compose -f \"docker-compose.prod.yml\" down -v"
+		},
+		{
+			"label": "npm run dev",
+			"type": "shell",
+			"command": "cd frontend;npm run dev"
+		},
+		{
+			"label": "run all",
+			"dependsOn": ["django runserver", "npm run dev"],
+			"problemMatcher": []
+		}
+	]
+}
